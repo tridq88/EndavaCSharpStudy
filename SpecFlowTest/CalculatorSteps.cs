@@ -67,6 +67,22 @@ public class CalculatorSteps
         _driver.Quit();
     }
 
+    // Perform subtraction
+    [When("I subtract (.*) from (.*)")]
+    public void WhenISubtractTwoNumbers(int num1, int num2)
+    {
+        // Find the buttons for the numbers and operations
+        var button1 = _driver.FindElementByAccessibilityId("num" + num1.ToString() + "Button");
+        var subButton = _driver.FindElementByName("Minus");
+        var button2 = _driver.FindElementByAccessibilityId("num" + num2.ToString() + "Button");
+        var equalsButton = _driver.FindElementByName("Equals");
+        // Perform the operations by clicking the buttons
+        button1.Click();
+        subButton.Click();
+        button2.Click();
+        equalsButton.Click();
+    }
+
     // Perform division
     [When("I divide (.*) by (.*)")]
     public void WhenIDivideTwoNumbers(int num1, int num2)

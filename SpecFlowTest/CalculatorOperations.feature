@@ -8,6 +8,11 @@ Scenario: Adding two numbers
     When I add 5 and 3
     Then I should see the result as 8
 
+Scenario: Subtracting two numbers
+    Given I launch the Calculator app
+    When I subtract 5 from 3
+    Then I should see the result as 2
+
 Scenario: Dividing two numbers
     Given I launch the Calculator app
     When I divide 6 by 2
