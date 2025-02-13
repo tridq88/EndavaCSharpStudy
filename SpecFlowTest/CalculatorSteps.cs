@@ -95,4 +95,20 @@ public class CalculatorSteps
         // Clean up the driver after the test
         _driver.Quit();
     }
+
+    // Perform multiplication
+    [When("I multiply (.*) by (.*)")]
+    public void WhenIMultiplyTwoNumbers(int num1, int num2)
+    {
+        // Find the buttons for the numbers and operations
+        var button1 = _driver.FindElementByAccessibilityId("num" + num1.ToString() + "Button");
+        var mulButton = _driver.FindElementByName("Multiply by");
+        var button2 = _driver.FindElementByAccessibilityId("num" + num2.ToString() + "Button");
+        var equalsButton = _driver.FindElementByName("Equals");
+        // Perform the operations by clicking the buttons
+        button1.Click();
+        mulButton.Click();
+        button2.Click();
+        equalsButton.Click();
+    }
 }
