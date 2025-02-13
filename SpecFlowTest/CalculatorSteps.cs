@@ -43,29 +43,16 @@ public class CalculatorSteps
     [When("I add (.*) and (.*)")]
     public void WhenIAddTwoNumbers(int num1, int num2)
     {
-        Console.WriteLine("Adding two numbers: " + num1 + " and " + num2);
         // Find the buttons for the numbers and operations
         var button1 = _driver.FindElementByAccessibilityId("num" + num1.ToString() + "Button");
         var addButton = _driver.FindElementByName("Plus");
         var button2 = _driver.FindElementByAccessibilityId("num" + num2.ToString() + "Button");
         var equalsButton = _driver.FindElementByName("Equals");
-
-
         // Perform the operations by clicking the buttons
-        try 
-        {
-            button1.Click();
-            addButton.Click();
-            button2.Click();
-            equalsButton.Click();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-            Console.WriteLine("Stack Trace: " + ex.StackTrace);
-            throw;
-        }
-
+        button1.Click();
+        addButton.Click();
+        button2.Click();
+        equalsButton.Click();
     }
 
     // Verify the result
@@ -74,6 +61,35 @@ public class CalculatorSteps
     {
         // Get the result from the Calculator's display
         var result = _driver.FindElementByAccessibilityId("CalculatorResults").Text;
+        Assert.AreEqual($"Display is {expectedResult}", result);
+
+        // Clean up the driver after the test
+        _driver.Quit();
+    }
+
+    // Perform division
+    [When("I divide (.*) by (.*)")]
+    public void WhenIDivideTwoNumbers(int num1, int num2)
+    {
+        // Find the buttons for the numbers and operations
+        var button1 = _driver.FindElementByAccessibilityId("num" + num1.ToString() + "Button");
+        var divButton = _driver.FindElementByName("Divide by");
+        var button2 = _driver.FindElementByAccessibilityId("num" + num2.ToString() + "Button");
+        var equalsButton = _driver.FindElementByName("Equals");
+        // Perform the operations by clicking the buttons
+        button1.Click();
+        divButton.Click();
+        button2.Click();
+        equalsButton.Click();
+    }
+
+    // Verify the division by 0 result
+    [Then("I should see division by zero error message")]
+    public void ThenIShouldSeeTheDivisionByZeroErrorMessage()
+    {
+        // Get the result from the Calculator's display
+        var result = _driver.FindElementByAccessibilityId("CalculatorResults").Text;
+        var expectedResult = "Cannot divide by zero";
         Assert.AreEqual($"Display is {expectedResult}", result);
 
         // Clean up the driver after the test
