@@ -10,33 +10,14 @@ using OpenQA.Selenium.Support.UI;
 [Binding]
 public class CalculatorSteps
 {
-    private WindowsDriver<WindowsElement> _driver;
+    private WindowsDriver<WindowsElement> _driver = Hooks.g_DriverCalc;
 
     // Launch Calculator app
     [Given("I launch the Calculator app")]
     public void GivenILaunchTheCalculatorApp()
     {
-        var options = new AppiumOptions();
-        options.AddAdditionalCapability("app", "Microsoft.WindowsCalculator_8wekyb3d8bbwe!App");
-        options.AddAdditionalCapability("platformName", "Windows");
-        options.AddAdditionalCapability("deviceName", "WindowsPC");
-
-        options.AddAdditionalCapability("logLevel", "debug");  // Enable debugging log
-
-        try
-        {
-            _driver = new WindowsDriver<WindowsElement>(
-                new Uri("http://127.0.0.1:4723"), options);
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            Console.WriteLine("Calculator app launched successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-            Console.WriteLine("Stack Trace: " + ex.StackTrace);
-            throw;
-        }
-
+        // Check if the Calculator app is launched
+        Assert.IsNotNull(_driver);
     }
 
     // Perform addition
