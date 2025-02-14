@@ -74,6 +74,15 @@ namespace SpecFlowTest
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 6
+#line hidden
+#line 7
+    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Adding two numbers")]
         [NUnit.Framework.CategoryAttribute("addition")]
@@ -83,7 +92,7 @@ namespace SpecFlowTest
                     "addition"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Adding two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 7
+#line 10
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -93,13 +102,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 8
-    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 6
+this.FeatureBackground();
 #line hidden
-#line 9
+#line 11
     testRunner.When("I add 5 and 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 10
+#line 12
     testRunner.Then("I should see the result as 8", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -115,7 +124,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "subtraction"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Subtracting two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 13
+#line 15
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -125,13 +134,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 14
-    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 15
-    testRunner.When("I subtract 5 from 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 6
+this.FeatureBackground();
 #line hidden
 #line 16
+    testRunner.When("I subtract 5 from 3", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 17
     testRunner.Then("I should see the result as 2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -149,7 +158,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "non_zero"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Dividing two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 19
+#line 20
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -159,8 +168,8 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 20
-    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 6
+this.FeatureBackground();
 #line hidden
 #line 21
     testRunner.When("I divide 6 by 2", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -193,13 +202,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 26
-    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 6
+this.FeatureBackground();
 #line hidden
-#line 27
+#line 26
     testRunner.When("I divide 6 by 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 28
+#line 27
     testRunner.Then("I should see division by zero error message", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -226,7 +235,7 @@ this.ScenarioInitialize(scenarioInfo);
             argumentsOfScenario.Add("num2", num2);
             argumentsOfScenario.Add("expected_result", expected_Result);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Multiplying two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 31
+#line 30
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -236,13 +245,13 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 32
-    testRunner.Given("I launch the Calculator app", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 6
+this.FeatureBackground();
 #line hidden
-#line 33
+#line 31
     testRunner.When(string.Format("I multiply {0} by {1}", num1, num2), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 34
+#line 32
     testRunner.Then(string.Format("I should see the result as {0}", expected_Result), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
