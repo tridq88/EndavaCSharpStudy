@@ -50,37 +50,23 @@ namespace NotepadPlusPlusAutomationTests
             // Attach to the main window
             var window = _notepadApp.GetMainWindow(_automation);
 
-            // Log the action of clicking the "Search" tab
-            Console.WriteLine("Clicking on the 'Search' tab...");
+            // Click on the "Search" tab and the "Find" item in the dropdown menu
+            window.FindFirstDescendant(cf => cf.ByName("Search")).AsMenuItem().Click();
+            Thread.Sleep(3000); // Optional sleep to see the dropdown menu
 
-            // Find the "Search" menu item
-            var searchTab = window.FindFirstDescendant(cf => cf.ByName("Search")).AsMenuItem();
+            // Wait for the "Find" menu item to be available
+            window.FindFirstDescendant(cf => cf.ByName("Find...")).AsMenuItem().Click();
 
-            // Click on the "Search" tab
-            searchTab.Click();
-            Thread.Sleep(500); // Optional wait to ensure the menu is displayed
-
-            // Log the action of clicking on the "Find" item
-            Console.WriteLine("Clicking on the 'Find' item...");
-
-            // Find the "Find" menu item
-            var findItem = window.FindFirstDescendant(cf => cf.ByName("Find...")).AsMenuItem();
-
-            // Click on the "Find" item
-            findItem.Click();
-
-            // Log the action of checking for the "Find" dialog
-            Console.WriteLine("Checking if the 'Find' dialog has opened...");
-
-            // Wait for the Find dialog to appear and verify it is open
+            // Wait for the "Find" dialog to appear
             var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find")).AsWindow();
+            Thread.Sleep(3000); // Optional sleep to see the dialog
 
             // Assert that the "Find" dialog has opened
             Assert.IsNotNull(findDialog, "The 'Find' dialog did not open.");
-
-            // Log success
-            Console.WriteLine("Test passed: 'Find' dialog opened successfully, and text box found.");
+            Console.WriteLine("Test passed: 'Find' dialog opened successfully.");
         }
+
+
 
         [TearDown]
         public void TearDown()
