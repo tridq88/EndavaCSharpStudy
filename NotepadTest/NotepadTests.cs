@@ -44,8 +44,16 @@ namespace NotepadPlusPlusAutomationTests
             }
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            // Close Notepad++ after the test
+            _notepadApp.Close();
+            _automation.Dispose();
+        }
+
         [Test]
-        public void TestClickSearchAndFindInNotepad()
+        public void TestClickSearchAndFind()
         {
             // Attach to the main window
             var window = _notepadApp.GetMainWindow(_automation);
@@ -67,13 +75,5 @@ namespace NotepadPlusPlusAutomationTests
         }
 
 
-
-        [TearDown]
-        public void TearDown()
-        {
-            // Close Notepad++ after the test
-            _notepadApp.Close();
-            _automation.Dispose();
-        }
     }
 }
