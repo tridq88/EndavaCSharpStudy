@@ -138,7 +138,15 @@ namespace NotepadPlusPlusAutomationTests
                     Console.WriteLine($"✅ Screenshot saved at: {imagePath}");
 
                     // Extract text using Tesseract OCR
-                    ExtractTextFromImage(imagePath);
+                    string extractedText = ExtractTextFromImage(imagePath);
+
+                    Console.WriteLine("\n📌 Extracted Text from Image:\n" + extractedText);
+
+                    // ✅ Use NUnit Assert to verify the extracted text contains the expected message
+                    string ExpectedText = "Find: Reached document end";
+                    Assert.That(extractedText, Does.Contain(ExpectedText), "❌ Assertion Failed: Extracted text does NOT contain the expected message!");
+
+                    Console.WriteLine("✅ Test Passed: The extracted text contains the expected message.");
                 }
             }
         }
@@ -188,10 +196,9 @@ namespace NotepadPlusPlusAutomationTests
             }
         }
 
-        static void ExtractTextFromImage(string imagePath)
+        private string ExtractTextFromImage(string imagePath)
         {
-            string tessDataPath = @"C:\Program Files\Tesseract-OCR\tessdata";  // Update this to your Tesseract path
-
+            string tessDataPath = @"C:\Program Files\Tesseract-OCR\tessdata";
             try
             {
                 using (var engine = new TesseractEngine(tessDataPath, "eng", EngineMode.Default))
@@ -200,15 +207,15 @@ namespace NotepadPlusPlusAutomationTests
                     {
                         using (var page = engine.Process(img))
                         {
-                            string extractedText = page.GetText();
-                            Console.WriteLine("\n📌 Extracted Text from Image:\n" + extractedText);
+                            return page.GetText().Trim();  // Trim extra spaces/newlines
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("❌ Error: " + ex.Message);
+                Assert.Fail($"❌ OCR extraction failed: {ex.Message}");
+                return string.Empty;  // This will never be reached due to Assert.Fail()
             }
         }
     }
