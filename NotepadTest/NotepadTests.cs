@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Tesseract;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NotepadPlusPlusAutomationTests
 {
@@ -237,6 +238,67 @@ namespace NotepadPlusPlusAutomationTests
                 Assert.Fail($"❌ OCR extraction failed: {ex.Message}");
                 return string.Empty;  // This will never be reached due to Assert.Fail()
             }
+        }
+
+        //=================================================================================================
+        // TC03: Copy text from one file to another
+        //=================================================================================================
+        [Test]
+        public void TestCopyTextFromOneFileToAnother()
+        {
+            // Attach to the main window
+            var window = _notepadApp.GetMainWindow(_automation);
+
+            // ✅ Locate the text editor (Using Scintilla ClassName)
+            var textEditor = window.FindFirstDescendant(cf => cf.ByClassName("Scintilla"));
+            Assert.IsNotNull(textEditor, "❌ Text editor not found.");
+
+            // ✅ Ensure Notepad++ text editor is focused
+            textEditor.Focus();
+            Thread.Sleep(500);
+
+            // ✅ Step 1: Open a new tab (Ctrl + N)
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_N);
+            Keyboard.Release(VirtualKeyShort.KEY_N);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+            Thread.Sleep(2000);
+
+            // ✅ Step 2: Enter new text into the first tab
+            string textToCopy = "Hello, this is a test for copying text!";
+            textEditor.AsTextBox().Enter(textToCopy);
+            Thread.Sleep(2000);
+
+            // ✅ Step 3: Copy text (Ctrl + A, Ctrl + C)
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_A);
+            Keyboard.Release(VirtualKeyShort.KEY_A);
+            Thread.Sleep(200);
+            Keyboard.Press(VirtualKeyShort.KEY_C);
+            Keyboard.Release(VirtualKeyShort.KEY_C);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+            Console.WriteLine("✅ Text copied successfully.");
+
+            // ✅ Step 4: Open a new tab (Ctrl + N)
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_N);
+            Keyboard.Release(VirtualKeyShort.KEY_N);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+            Thread.Sleep(2000);
+
+            // ✅ Step 5: Paste text (Ctrl + V)
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_V);
+            Keyboard.Release(VirtualKeyShort.KEY_V);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+            Thread.Sleep(2000);
+            Console.WriteLine("✅ Text pasted into the second file.");
+
+            // ✅ Step 6: Verify copied text
+            var newTextEditor = window.FindFirstDescendant(cf => cf.ByClassName("Scintilla"));
+            string pastedText = newTextEditor.AsTextBox().Text;
+            Assert.That(pastedText, Is.EqualTo(textToCopy), "❌ Copied text does not match the original.");
+            Console.WriteLine("✅ Copy-Paste operation verified successfully.");
         }
     }
 }
