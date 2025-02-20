@@ -22,41 +22,17 @@ namespace NotepadPlusPlusAutomationTests
 
         [SetUp]
         public void SetUp()
+        
         {
-            // Log the start of the test setup
-            Console.WriteLine("Attempting to launch Notepad++...");
-
-            try
-            {
-                // Launch Notepad++
-                _notepadApp = FlaUI.Core.Application.Launch("C:\\Program Files\\Notepad++\\notepad++.exe");
-                _automation = new UIA3Automation();
-
-                // Wait for the window to load and check if it opens successfully
-                var window = _notepadApp.GetMainWindow(_automation);
-
-                if (window != null)
-                {
-                    Console.WriteLine("Notepad++ launched successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Failed to retrieve the main window of Notepad++.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log any exception that occurs during launching
-                Console.WriteLine($"Error launching Notepad++: {ex.Message}");
-            }
+            NotepadHelpers.OpenNotepad();
+            _notepadApp = NotepadHelpers.NotepadApp;
+            _automation = NotepadHelpers.Automation;
         }
 
         [TearDown]
         public void TearDown()
         {
-            // Close Notepad++ after the test
-            _notepadApp.Close();
-            _automation.Dispose();
+            NotepadHelpers.CloseNotepad();
         }
 
 
