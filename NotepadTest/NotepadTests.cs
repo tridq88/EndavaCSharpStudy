@@ -1,5 +1,6 @@
 ﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
 using FlaUI.Core.WindowsAPI;
 using FlaUI.UIA3;
 using NUnit.Framework;
@@ -9,8 +10,6 @@ using System.Drawing;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Tesseract;
-using FlaUI.Core.Conditions;
-using FlaUI.UIA3.Patterns;
 
 namespace NotepadPlusPlusAutomationTests
 {
@@ -108,7 +107,7 @@ namespace NotepadPlusPlusAutomationTests
         [Test]
         public void TestDropdownSelectAndFindText()
         {
-            OpenFindDialog();
+            OpenFindDialogUsingHotKey();
             ClickDropdownAndFindNext();
             Thread.Sleep(3000); // Optional sleep to see the find action result
 
@@ -151,6 +150,27 @@ namespace NotepadPlusPlusAutomationTests
             }
         }
 
+        private void OpenFindDialogUsingHotKey()
+        {
+            // Attach to the main window
+            var window = _notepadApp.GetMainWindow(_automation);
+
+            // ✅ Press Ctrl + F to open the Find dialog
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+
+            // ✅ Wait for the "Find" dialog to appear
+            Thread.Sleep(3000);  // Small delay to allow UI to update
+
+            // ✅ Locate the "Find" dialog
+            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find"))?.AsWindow();
+
+            // ✅ Assert that the "Find" dialog has opened
+            Assert.IsNotNull(findDialog, "❌ The 'Find' dialog did not open.");
+            Console.WriteLine("✅ The 'Find' dialog successfully opened using Ctrl + F.");
+        }
         private void ClickDropdownAndFindNext()
         {
             using (var automation = new UIA3Automation())
