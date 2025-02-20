@@ -42,27 +42,8 @@ namespace NotepadPlusPlusAutomationTests
         [Test]
         public void TestClickSearchAndFind()
         {
-            OpenFindDialog();
+            NotepadHelpers.OpenFindDialog();
             Console.WriteLine("Test passed: 'Find' dialog opened successfully.");
-        }
-
-        private void OpenFindDialog()
-        {
-            // Attach to the main window
-            var window = _notepadApp.GetMainWindow(_automation);
-
-            // Click on the "Search" tab and the "Find" item in the dropdown menu
-            window.FindFirstDescendant(cf => cf.ByName("Search")).AsMenuItem().Click();
-
-            // Wait for the "Find" menu item to be available
-            window.FindFirstDescendant(cf => cf.ByName("Find...")).AsMenuItem().Click();
-
-            // Wait for the "Find" dialog to appear
-            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find")).AsWindow();
-            Thread.Sleep(3000); // Optional sleep to see the dialog
-
-            // Assert that the "Find" dialog has opened
-            Assert.IsNotNull(findDialog, "The 'Find' dialog did not open.");
         }
 
         // =================================================================================================

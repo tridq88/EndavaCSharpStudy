@@ -1,11 +1,17 @@
 ﻿
-using FlaUI.UIA3;
 using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
+using FlaUI.Core.WindowsAPI;
+using FlaUI.UIA3;
+using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing.Imaging;
+using System.Drawing;
+using System.Threading;
+using System.Runtime.InteropServices;
+using Tesseract;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace NotepadPlusPlusAutomationTests
 {
@@ -49,6 +55,25 @@ namespace NotepadPlusPlusAutomationTests
             // Close Notepad++ after the test
             NotepadApp.Close();
             Automation.Dispose();
+        }
+
+        public static void OpenFindDialog()
+        {
+            // Attach to the main window
+            var window = NotepadApp.GetMainWindow(Automation);
+
+            // Click on the "Search" tab and the "Find" item in the dropdown menu
+            window.FindFirstDescendant(cf => cf.ByName("Search")).AsMenuItem().Click();
+
+            // Wait for the "Find" menu item to be available
+            window.FindFirstDescendant(cf => cf.ByName("Find...")).AsMenuItem().Click();
+
+            // Wait for the "Find" dialog to appear
+            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find")).AsWindow();
+            Thread.Sleep(3000); // Optional sleep to see the dialog
+
+            // Assert that the "Find" dialog has opened
+            Assert.IsNotNull(findDialog, "The 'Find' dialog did not open.");
         }
     }
 }
