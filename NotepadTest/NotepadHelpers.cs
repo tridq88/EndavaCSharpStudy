@@ -78,5 +78,57 @@ namespace NotepadPlusPlusAutomationTests
                 throw new Exception("The 'Find' dialog did not open.");
             }
         }
+
+        public static void OpenFindDialogUsingHotKey()
+        {
+            // Attach to the main window
+            var window = NotepadApp.GetMainWindow(Automation);
+
+            // ✅ Press Ctrl + F to open the Find dialog
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+
+            // ✅ Wait for the "Find" dialog to appear
+            Thread.Sleep(3000);  // Small delay to allow UI to update
+
+            // ✅ Locate the "Find" dialog
+            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find"))?.AsWindow();
+
+            // ✅ Assert that the "Find" dialog has opened
+            Assert.IsNotNull(findDialog, "❌ The 'Find' dialog did not open.");
+            Console.WriteLine("✅ The 'Find' dialog successfully opened using Ctrl + F.");
+        }
+
+        public static void ClickDropdownAndFindNext()
+        {
+            using (var automation = new UIA3Automation())
+            {
+                // ✅ Step 1: Attach to Notepad++'s "Find" Dialog
+                var app = FlaUI.Core.Application.Attach("notepad++.exe"); // Attach to Notepad++
+                var window = app.GetMainWindow(automation).FindFirstDescendant(x => x.ByName("Find"));
+
+                Assert.IsNotNull(window, "❌ Find dialog not found! Make sure it is open.");
+                Console.WriteLine("✅ Find dialog detected.");
+
+                // ✅ Step 2: Find and Click the "Dropdown" Button
+                var dropdownButton = window.FindFirstDescendant(x => x.ByAutomationId("DropDown"));
+
+                Assert.IsNotNull(dropdownButton, "❌ Dropdown button not found!");
+                dropdownButton.AsButton().Invoke();
+                Console.WriteLine("✅ Clicked 'Dropdown' button.");
+
+                // ✅ Step 3: Wait for UI to update
+                Thread.Sleep(500);
+
+                // ✅ Step 4: Find and Click the "Find Next" Button
+                var findNextButton = window.FindFirstDescendant(x => x.ByName("Find Next"));
+
+                Assert.IsNotNull(findNextButton, "❌ 'Find Next' button not found!");
+                findNextButton.AsButton().Invoke();
+                Console.WriteLine("✅ Clicked 'Find Next' button.");
+            }
+        }
     }
 }

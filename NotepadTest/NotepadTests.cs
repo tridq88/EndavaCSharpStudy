@@ -65,8 +65,8 @@ namespace NotepadPlusPlusAutomationTests
         [Test]
         public void TestDropdownSelectAndFindText()
         {
-            OpenFindDialogUsingHotKey();
-            ClickDropdownAndFindNext();
+            NotepadHelpers.OpenFindDialogUsingHotKey();
+            NotepadHelpers.ClickDropdownAndFindNext();
             Thread.Sleep(3000); // Optional sleep to see the find action result
 
             string windowTitle = "Find";  // Change this to the exact window title
@@ -105,72 +105,6 @@ namespace NotepadPlusPlusAutomationTests
 
                     Console.WriteLine("✅ Test Passed: The extracted text contains the expected message.");
                 }
-            }
-        }
-
-        private void OpenFindDialogUsingHotKey()
-        {
-            // Attach to the main window
-            var window = _notepadApp.GetMainWindow(_automation);
-
-            // ✅ Press Ctrl + F to open the Find dialog
-            Keyboard.Press(VirtualKeyShort.CONTROL);
-            Keyboard.Press(VirtualKeyShort.KEY_F);
-            Keyboard.Release(VirtualKeyShort.KEY_F);
-            Keyboard.Release(VirtualKeyShort.CONTROL);
-
-            // ✅ Wait for the "Find" dialog to appear
-            Thread.Sleep(3000);  // Small delay to allow UI to update
-
-            // ✅ Locate the "Find" dialog
-            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find"))?.AsWindow();
-
-            // ✅ Assert that the "Find" dialog has opened
-            Assert.IsNotNull(findDialog, "❌ The 'Find' dialog did not open.");
-            Console.WriteLine("✅ The 'Find' dialog successfully opened using Ctrl + F.");
-        }
-        private void ClickDropdownAndFindNext()
-        {
-            using (var automation = new UIA3Automation())
-            {
-                // ✅ Step 1: Attach to Notepad++'s "Find" Dialog
-                var app = FlaUI.Core.Application.Attach("notepad++.exe"); // Attach to Notepad++
-                var window = app.GetMainWindow(automation).FindFirstDescendant(x => x.ByName("Find"));
-
-                if (window == null)
-                {
-                    Console.WriteLine("❌ Find dialog not found! Make sure it is open.");
-                    return;
-                }
-
-                Console.WriteLine("✅ Find dialog detected.");
-
-                // ✅ Step 2: Find and Click the "Dropdown" Button
-                var dropdownButton = window.FindFirstDescendant(x => x.ByAutomationId("DropDown"));
-
-                if (dropdownButton == null)
-                {
-                    Console.WriteLine("❌ Dropdown button not found!");
-                    return;
-                }
-
-                dropdownButton.AsButton().Invoke();
-                Console.WriteLine("✅ Clicked 'Dropdown' button.");
-
-                // ✅ Step 3: Wait for UI to update
-                Thread.Sleep(500);
-
-                // ✅ Step 4: Find and Click the "Find Next" Button
-                var findNextButton = window.FindFirstDescendant(x => x.ByName("Find Next"));
-
-                if (findNextButton == null)
-                {
-                    Console.WriteLine("❌ 'Find Next' button not found!");
-                    return;
-                }
-
-                findNextButton.AsButton().Invoke();
-                Console.WriteLine("✅ Clicked 'Find Next' button.");
             }
         }
 
