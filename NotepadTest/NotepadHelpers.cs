@@ -73,7 +73,10 @@ namespace NotepadPlusPlusAutomationTests
             Thread.Sleep(3000); // Optional sleep to see the dialog
 
             // Assert that the "Find" dialog has opened
-            Assert.IsNotNull(findDialog, "The 'Find' dialog did not open.");
+            if (findDialog == null)
+            {
+                throw new Exception("The 'Find' dialog did not open.");
+            }
         }
     }
 }
