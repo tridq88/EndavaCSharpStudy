@@ -65,6 +65,9 @@ namespace NotepadPlusPlusAutomationTests
         [Test]
         public void TestDropdownSelectAndFindText()
         {
+            // Preconditions: Open a new tab and search for the first word
+            NotepadHelpers.SearchFirstWordInCurrentTab();
+
             NotepadHelpers.OpenFindDialogUsingHotKey();
             NotepadHelpers.ClickDropdownAndFindNext();
             Thread.Sleep(3000); // Optional sleep to see the find action result

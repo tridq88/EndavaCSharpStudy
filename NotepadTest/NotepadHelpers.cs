@@ -101,6 +101,72 @@ namespace NotepadPlusPlusAutomationTests
             Console.WriteLine("✅ The 'Find' dialog successfully opened using Ctrl + F.");
         }
 
+        public static void SearchFirstWordInCurrentTab()
+        {
+            var window = NotepadApp.GetMainWindow(Automation);
+            if (window == null)
+            {
+                throw new Exception("❌ Notepad++ main window not found.");
+            }
+
+            // ✅ Locate the Notepad++ text editor
+            var textEditor = window.FindFirstDescendant(cf => cf.ByClassName("Scintilla"));
+            if (textEditor == null)
+            {
+                throw new Exception("❌ Text editor not found.");
+            }
+
+            // ✅ Get the current text from Notepad++
+            string text = textEditor.AsTextBox().Text;
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new Exception("❌ No text found in the editor.");
+            }
+
+            // ✅ Extract the first word
+            string firstWord = text.Split(new[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            if (string.IsNullOrEmpty(firstWord))
+            {
+                throw new Exception("❌ No first word found.");
+            }
+            Console.WriteLine($"✅ First word found: {firstWord}");
+
+            // ✅ Open "Find" dialog using Ctrl + F
+            Keyboard.Press(VirtualKeyShort.CONTROL);
+            Keyboard.Press(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.KEY_F);
+            Keyboard.Release(VirtualKeyShort.CONTROL);
+            Thread.Sleep(500);
+
+            // ✅ Locate the "Find what:" text box
+            var findDialog = window.FindFirstDescendant(cf => cf.ByName("Find"));
+            if (findDialog == null)
+            {
+                throw new Exception("❌ Find dialog not found.");
+            }
+
+            var findTextBox = findDialog.FindFirstDescendant(cf => cf.ByControlType(FlaUI.Core.Definitions.ControlType.Edit));
+            if (findTextBox == null)
+            {
+                throw new Exception("❌ Find input box not found.");
+            }
+
+            // ✅ Enter the first word into the search box
+            findTextBox.AsTextBox().Enter(firstWord);
+            Thread.Sleep(500);
+
+            // ✅ Click "Find Next" button
+            var findNextButton = findDialog.FindFirstDescendant(cf => cf.ByName("Find Next"));
+            if (findNextButton == null)
+            {
+                throw new Exception("❌ 'Find Next' button not found.");
+            }
+            findNextButton.AsButton().Invoke();
+            Thread.Sleep(500);
+
+            Console.WriteLine($"✅ Search completed for the word: {firstWord}");
+        }
+
         public static void ClickDropdownAndFindNext()
         {
             using (var automation = new UIA3Automation())
