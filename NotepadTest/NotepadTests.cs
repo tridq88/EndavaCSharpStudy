@@ -192,7 +192,7 @@ namespace NotepadPlusPlusAutomationTests
             var newTextEditor = window.FindFirstDescendant(cf => cf.ByClassName("Scintilla"));
             string pastedText = newTextEditor.AsTextBox().Text;
             Assert.That(pastedText, Is.EqualTo(textToCopy), "❌ Copied text does not match the original.");
-            Console.WriteLine("✅ Copy-Paste operation verified successfully.");
+            Console.WriteLine("✅ Test Passed: Copy-Paste operation verified successfully.");
         }
     }
 }
