@@ -8,8 +8,8 @@ namespace NotepadPlusPlusAutomationTests
     {
         private static ExtentReports _extent;
         private static ExtentTest _test;
-        // ✅ Save report in the project root folder instead of "bin/Debug"
-        private static string reportPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "TestReport.html");
+        // ✅ Save report 
+        private static string reportPath = "C:\\Temp\\TestReport.html";
 
         public static void InitializeReport()
         {
@@ -42,6 +42,12 @@ namespace NotepadPlusPlusAutomationTests
         {
             _test.Fail(message);
             Console.WriteLine($"❌ FAIL: {message}");
+        }
+
+        public static void LogSkip(string message)
+        {
+            _test.Skip(message);
+            Console.WriteLine($"⚠️ SKIPPED: {message}");
         }
 
         public static void FinalizeReport()

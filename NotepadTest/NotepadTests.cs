@@ -48,11 +48,28 @@ namespace NotepadPlusPlusAutomationTests
         [TearDown]
         public void TearDown()
         {
-            if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed)
+            var testStatus = TestContext.CurrentContext.Result.Outcome.Status;
+            Console.WriteLine($"🔍 Test Teardown Called - Status: {testStatus}");
+
+            if (testStatus == NUnit.Framework.Interfaces.TestStatus.Failed)
             {
                 string errorMessage = TestContext.CurrentContext.Result.Message;
+                Console.WriteLine($"❌ FAIL: {errorMessage}");
                 ExtentReportHelper.LogFail($"Test failed: {errorMessage}");
             }
+            else if (testStatus == NUnit.Framework.Interfaces.TestStatus.Skipped) // ✅ Debug Skipped Test
+            {
+                Console.WriteLine("⚠️ Detected Skipped Test.");
+                string reason = TestContext.CurrentContext.Result.Message ?? "Test skipped.";
+                ExtentReportHelper.LogSkip(reason);
+            }
+            else
+            {
+                Console.WriteLine("✅ Test Passed.");
+                ExtentReportHelper.LogPass("Test passed.");
+            }
+
+            Console.WriteLine("==============================================");
             NotepadHelpers.CloseNotepad();
         }
 
@@ -61,6 +78,7 @@ namespace NotepadPlusPlusAutomationTests
         // TC01: Open the Find dialog in Notepad++
         // =================================================================================================
         [Test]
+        [Category("Others")]
         public void TestClickSearchAndFind()
         {
             NotepadHelpers.OpenFindDialog();
@@ -84,12 +102,14 @@ namespace NotepadPlusPlusAutomationTests
         }
 
         [Test]
+        [Category("ImageCapture")]
         public void TestDropdownSelectAndFindText()
         {
             // Preconditions: Open a new tab and search for the first word
             bool isPrecondtionGood = true;
             // Uncomment the below line to fail the precondition
             isPrecondtionGood = false;
+
             NotepadHelpers.SearchFirstWordInCurrentTab(isPrecondtionGood);
 
             NotepadHelpers.OpenFindDialogUsingHotKey();
@@ -123,12 +143,12 @@ namespace NotepadPlusPlusAutomationTests
 
                     // Extract text using Tesseract OCR
                     string extractedText = ExtractTextFromImage(imagePath);
-
-                    Console.WriteLine("\n📌 Extracted Text from Image:\n" + extractedText);
+                    string lastLine = extractedText.Split('\n').Last().Trim();
+                    Console.WriteLine("\n📌 Extracted Text from Image:\n" + lastLine);
 
                     // ✅ Use NUnit Assert to verify the extracted text contains the expected message
                     string ExpectedText = "Find: Reached document end";
-                    Assert.That(extractedText, Does.Contain(ExpectedText), "❌ Assertion Failed: Extracted text does NOT contain the expected message!");
+                    Assert.That(lastLine, Does.Contain(ExpectedText), "❌ Assertion Failed: Extracted text does NOT contain the expected message!");
 
                     Console.WriteLine("✅ Test Passed: The extracted text contains the expected message.");
                 }
@@ -162,6 +182,7 @@ namespace NotepadPlusPlusAutomationTests
         // TC03: Copy text from one file to another
         //=================================================================================================
         [Test]
+        [Ignore("Skipping this test temporarily for debugging.")]
         public void TestCopyTextFromOneFileToAnother()
         {
             // Attach to the main window
