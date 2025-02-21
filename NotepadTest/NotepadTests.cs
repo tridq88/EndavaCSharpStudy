@@ -48,6 +48,11 @@ namespace NotepadPlusPlusAutomationTests
         [TearDown]
         public void TearDown()
         {
+            if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Failed)
+            {
+                string errorMessage = TestContext.CurrentContext.Result.Message;
+                ExtentReportHelper.LogFail($"Test failed: {errorMessage}");
+            }
             NotepadHelpers.CloseNotepad();
         }
 
@@ -82,7 +87,10 @@ namespace NotepadPlusPlusAutomationTests
         public void TestDropdownSelectAndFindText()
         {
             // Preconditions: Open a new tab and search for the first word
-            NotepadHelpers.SearchFirstWordInCurrentTab();
+            bool isPrecondtionGood = true;
+            // Uncomment the below line to fail the precondition
+            isPrecondtionGood = false;
+            NotepadHelpers.SearchFirstWordInCurrentTab(isPrecondtionGood);
 
             NotepadHelpers.OpenFindDialogUsingHotKey();
             NotepadHelpers.ClickDropdownAndFindNext();

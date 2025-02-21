@@ -101,7 +101,7 @@ namespace NotepadPlusPlusAutomationTests
             Console.WriteLine("✅ The 'Find' dialog successfully opened using Ctrl + F.");
         }
 
-        public static void SearchFirstWordInCurrentTab()
+        public static void SearchFirstWordInCurrentTab(bool isPrecondtionGood)
         {
             var window = NotepadApp.GetMainWindow(Automation);
             if (window == null)
@@ -152,7 +152,14 @@ namespace NotepadPlusPlusAutomationTests
             }
 
             // ✅ Enter the first word into the search box
-            findTextBox.AsTextBox().Enter(firstWord);
+            if (isPrecondtionGood)
+            {
+                findTextBox.AsTextBox().Enter(firstWord);
+            }
+            else
+            {
+                findTextBox.AsTextBox().Enter("InvalidWord");
+            }
             Thread.Sleep(500);
 
             // ✅ Click "Find Next" button
