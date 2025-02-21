@@ -20,10 +20,26 @@ namespace NotepadPlusPlusAutomationTests
         private Application _notepadApp;
         private UIA3Automation _automation;
 
+        [OneTimeSetUp]
+        public void GlobalSetup()
+        {
+            ExtentReportHelper.InitializeReport();
+            Console.WriteLine("✅ [OneTimeSetUp] - ExtentReports initialized.");
+        }
+
+        [OneTimeTearDown]
+        public void GlobalTeardown()
+        {
+            ExtentReportHelper.FinalizeReport();
+            Console.WriteLine("✅ [OneTimeTearDown] - ExtentReports finalized.");
+        }
+
         [SetUp]
         public void SetUp()
         
         {
+            Console.WriteLine("==============================================");
+            ExtentReportHelper.StartTest(TestContext.CurrentContext.Test.Name);
             NotepadHelpers.OpenNotepad();
             _notepadApp = NotepadHelpers.NotepadApp;
             _automation = NotepadHelpers.Automation;
@@ -43,7 +59,7 @@ namespace NotepadPlusPlusAutomationTests
         public void TestClickSearchAndFind()
         {
             NotepadHelpers.OpenFindDialog();
-            Console.WriteLine("Test passed: 'Find' dialog opened successfully.");
+            Console.WriteLine("✅ Test passed: 'Find' dialog opened successfully.");
         }
 
         // =================================================================================================
