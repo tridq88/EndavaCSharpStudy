@@ -108,7 +108,7 @@ namespace NotepadPlusPlusAutomationTests
             // Preconditions: Open a new tab and search for the first word
             bool isPrecondtionGood = true;
             // Uncomment the below line to fail the precondition
-            isPrecondtionGood = false;
+            //isPrecondtionGood = false;
 
             NotepadHelpers.SearchFirstWordInCurrentTab(isPrecondtionGood);
 
