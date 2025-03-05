@@ -10,7 +10,8 @@ using System.Drawing;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Tesseract;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Diagnostics;
+using System.Windows.Forms.Design;
 
 namespace NotepadPlusPlusAutomationTests
 {
@@ -238,6 +239,115 @@ namespace NotepadPlusPlusAutomationTests
             string pastedText = newTextEditor.AsTextBox().Text;
             Assert.That(pastedText, Is.EqualTo(textToCopy), "❌ Copied text does not match the original.");
             Console.WriteLine("✅ Test Passed: Copy-Paste operation verified successfully.");
+        }
+
+        //=================================================================================================
+        // TC04: Drag and Drop file into Notepad++
+        //=================================================================================================
+        [Test]
+        [Category("DragAndDrop")]
+        public void TestDragAndDropFileIntoNotepadPP()
+        {
+            string filePath = @"..\..\..\..\README.md";
+
+            DragFileToNotepadPP(filePath);
+        }
+
+        static void DragFileToNotepadPP(string filePath)
+        {
+            using (var automation = new UIA3Automation())
+            {
+                var app = FlaUI.Core.Application.Attach("notepad++.exe"); // Attach to Notepad++
+                var window = app.GetMainWindow(automation);
+                if (window == null)
+                {
+                    Console.WriteLine("❌ Notepad++ window not found.");
+                    return;
+                }
+                Console.WriteLine("✅ Notepad++ window found. Simulating drag-and-drop...");
+
+                // Open File Explorer and find the file
+                var fileDir = Path.GetDirectoryName(filePath);
+                Console.WriteLine($"🔍 Opening File Explorer at: {fileDir}");
+                var explorer = FlaUI.Core.Application.Launch("explorer.exe", Path.GetDirectoryName(fileDir));
+                //var explorer = FlaUI.Core.Application.Attach("explorer.exe");
+                if (explorer == null || explorer.HasExited)
+                {
+                    Console.WriteLine("❌ Failed to launch Explorer.");
+                    return;
+                }
+                Console.WriteLine("✅ Explorer launched. Waiting for 5 seconds...");
+                Thread.Sleep(5000); // Wait for Explorer to open
+
+                Process[] explorerProcesses = Process.GetProcessesByName("explorer");
+                if (explorerProcesses.Length == 0)
+                {
+                    Console.WriteLine("❌ No existing Explorer window found. Launching a new instance...");
+                    explorer = FlaUI.Core.Application.Launch("explorer.exe", Path.GetDirectoryName(filePath));
+                    Thread.Sleep(3000); // Wait for Explorer to fully launch
+                }
+                else
+                {
+                    Console.WriteLine("✅ Found existing Explorer process. Attaching...");
+                    explorer = FlaUI.Core.Application.Attach(explorerProcesses[0].Id);
+                }
+
+                var explorerWindow = explorer.GetMainWindow(automation);
+                if (explorerWindow == null)
+                {
+                    Console.WriteLine("❌ Could not attach to the Explorer window.");
+                    return;
+                }
+                Console.WriteLine("✅ Explorer window found.");
+
+
+                var fileName = Path.GetFileName(filePath);
+                Console.WriteLine($"🔍 Searching for file: {fileName}");
+                var fileItem = explorerWindow.FindFirstDescendant(x => x.ByName(fileName));
+                if (fileItem != null)
+                {
+                    Console.WriteLine("✅ File found in Explorer. Dragging into Notepad++...");
+
+                    // ✅ FIX: Manually calculate the center of the elements
+                    var fileBounds = fileItem.BoundingRectangle;
+                    var notepadBounds = window.BoundingRectangle;
+
+                    var filePos = new Point(fileBounds.X + fileBounds.Width / 2, fileBounds.Y + fileBounds.Height / 2);
+                    var notepadPos = new Point(notepadBounds.X + notepadBounds.Width / 2, notepadBounds.Y + notepadBounds.Height / 2);
+
+                    // Drag file into Notepad++
+                    Mouse.Drag(filePos, notepadPos);
+                    Thread.Sleep(2000); // Wait for file to load in Notepad++
+                }
+                else
+                {
+                    Console.WriteLine("❌ File not found in Explorer. Ensure it is visible.");
+                    return;
+                }
+
+                // ✅ Check if the file is opened in Notepad++
+                bool isFileOpened = IsFileOpenedInNotepadPP(window, filePath);
+                if (isFileOpened)
+                    Console.WriteLine($"✅ File '{Path.GetFileName(filePath)}' successfully opened in Notepad++.");
+                else
+                    Console.WriteLine($"❌ File '{Path.GetFileName(filePath)}' did NOT open in Notepad++.");
+            }
+        }
+
+        static bool IsFileOpenedInNotepadPP(Window window, string filePath)
+        {
+            var titleBar = window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.TitleBar));
+
+            if (titleBar != null)
+            {
+                string windowTitle = titleBar.AsLabel().Text;
+                string expectedTitle = Path.GetFileName(filePath);
+
+                Console.WriteLine($"🔍 Current Notepad++ Title: {windowTitle}");
+                return windowTitle.Contains(expectedTitle);
+            }
+
+            return false;
         }
     }
 }
